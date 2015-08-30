@@ -1,3 +1,5 @@
+Check out my blog post about this project: https://webbreacher.wordpress.com/2015/08/30/building-the-led-matrix/
+
 # thematrix
 Python code to interface with an LED matrix
 
@@ -7,9 +9,6 @@ Python code to interface with an LED matrix
 - One of these - Adafruit RGB Matrix HAT + RTC for Raspberry Pi - Mini Kit -  http://www.adafruit.com/product/2345
 - And a Real Time Clock battery for the HAT. 
 - I'm using a Raspi2 as the base OS.
-
-# Goal
-I was trying to make a customizable output for a Raspi2 to interface with a multicolor display. I wanted to send/create custom text in Python and send to the device. The matrix would be hung on the wall and show the data I send it.
 
 # Code
 The code (thematrix.py) contains functions to allow you to scroll (up/down or left-2-right/right-2-left) text on a display. Since I put two LED matrices chained together, my code is for a 128x32 total display. You may have to alter if you have a bigger or smaller LED matrix.
