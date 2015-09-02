@@ -132,15 +132,15 @@ matrix = Adafruit_RGBmatrix(32, 4)
 # Call the Function(s) to create content and write this to the Matrix
 ####
 loop = 0
-while loop<4:
+while loop == 0:
     #MatrixFill(0x00AA00, 1)
     image = CreateImage('-> Welcome <-', 124, 124, (180, 180, 180))
     ImageToMatrixScrollVer(image, 'down', 0.02)
-    image = CreateImage('Welcome to the new this program!', 400, 400, (0, 0, 255))
+    image = CreateImage('Welcome to the this program!', 400, 400, (0, 0, 255))
     ImageToMatrixScrollHor(image, 'r2l', 0.02)
 
     image = CreateImage('World Time', 124, 124, (180, 180, 180))
     ImageToMatrixScrollVer(image, 'up', 0.02)
     image = CreateImage(TimeZoneText(), 2300, 2300, (180, 0, 180))
     ImageToMatrixScrollHor(image, 'r2l', 0.02)
-    loop += 1
+    #loop += 1
