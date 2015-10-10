@@ -168,9 +168,9 @@ matrix = Adafruit_RGBmatrix(32, 4)
 loop = 0
 while loop==0: 
     #MatrixFill(0x00AA00, 1) #Fill the matrix with a single color
-    #image = CreateImage('-> TACREP <-', 124, 124, (180, 0, 0))
+    #image = CreateImage('-> NoVA Hackers <-', 124, 124, (180, 0, 0))
     #ImageToMatrixScrollVer(image, 'down', 0.02)
-    image = CreateImage('Welcome to the TACREP CSOC.', 400, 400, (0, 0, 255)) #Blue
+    image = CreateImage('Welcome to the NoVA Hackers meeting.', 400, 400, (0, 0, 255)) #Blue
     ImageToMatrixScrollHor(image, 'r2l', 0.01)
 
     image = CreateImage('Food Trucks', 124, 124, (180, 180, 180))
