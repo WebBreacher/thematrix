@@ -14,3 +14,6 @@ Python code to interface with an LED matrix
 The code (thematrix.py) contains functions to allow you to scroll (up/down or left-2-right/right-2-left) text on a display. Since I put two LED matrices chained together, my code is for a 128x32 total display. You may have to alter if you have a bigger or smaller LED matrix.
 
 I commented the code for ease of use/hacking (since my Python skills are rusty at best). I also left in there some code for displaying images (PPM format) on the display instead of text.
+
+# In Action
+If you want to see it in action/running, check out my YouTube video at https://www.youtube.com/watch?v=ve_ZMlnGpg4
