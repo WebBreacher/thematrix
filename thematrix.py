@@ -11,7 +11,7 @@
 # Load libraries
 ####
 from PIL import Image, ImageDraw, ImageFont
-from rgbmatrix import Adafruit_RGBmatrix
+#from rgbmatrix import Adafruit_RGBmatrix #DEBUG TURN ON BEFORE USING WITH MATRIX
 from datetime import datetime, timedelta
 from pytz import timezone
 import time
@@ -146,7 +146,7 @@ def MetroTrainInfo():
         else:
             state='%s mins' % train['Min']
         if train['DestinationName']=='No Passenger' or train['Car']=='-':
-        continue
+            continue
         all_trains = all_trains+'%s going to %s --- ' % (state, train['DestinationName'])
     all_trains_lst=[]
     all_trains_lst=all_trains.strip(" --- "),str(len(all_trains))
@@ -169,7 +169,7 @@ def WhatPlane():
 def WeatherUpdate():
     # TODO - Make this a "try"
     headers = {'User-Agent': ua}
-    url = 'http://api-ak.wunderground.com/api/c991975b7f4186c0/forecast/v:2.0/q/zmw:'+my_zip+'.1.99999.json'
+    url = 'http://api-ak.wunderground.com/api/c991975b7f4186c0/forecast/v:2.0/q/zmw:'+str(my_zip)+'.1.99999.json'
     weather_req = requests.get(url, headers=headers)
     all_weather = weather_req.json()
     print json.dumps(all_weather, indent=4)
@@ -182,12 +182,12 @@ def WeatherUpdate():
 ####
 # Create
 ####
-matrix = Adafruit_RGBmatrix(32, 4)
+#matrix = Adafruit_RGBmatrix(32, 4) #DEBUG TURN ON BEFORE USING WITH MATRIX
 
 ####
 # Call the Function(s) to create content and write this to the Matrix
 ####
-while true: 
+while True: 
     #MatrixFill(0x00AA00, 1) #Fill the matrix with a single color
     #image = CreateImage('-> NoVA Hackers <-', 124, 124, (180, 0, 0))
     #ImageToMatrixScrollVer(image, 'down', 0.02)
@@ -212,3 +212,4 @@ while true:
     
     FoodTrucks()
     WeatherUpdate()
+    exit()
