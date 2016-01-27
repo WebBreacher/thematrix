@@ -25,6 +25,10 @@ import json
 utc = pytz.utc
 text = ''
 all_food_trucks_combined = set()
+my_zip = 22201   # US Zip Code used in the weather module
+my_lat = 38.92   # The latitude you want to use as a location
+my_lon = -77.17  # The longitude you want to use as a location
+ua = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36'
 
 ####
 # Methods
@@ -128,8 +132,10 @@ def TimeZoneText():
     return text
 
 def MetroTrainInfo():
+    # This function accesses the Washington DC Area Metro Transit Authority train information
+    # You will need to get an API key from their site before using this.
     requests.packages.urllib3.disable_warnings()
-    headers = { 'api_key': '[APIKEY]'} # Get this from the API area of WMATA's site
+    headers = {'api_key': '[APIKEY]', 'User-Agent': ua} # Get this from the API area of WMATA's site
     wmata = requests.get("https://api.wmata.com/StationPrediction.svc/json/GetPrediction/ N03", headers=headers, verify=False)
     #print json.dumps(wmata.json(), indent=4)
     trains = wmata.json()
@@ -140,23 +146,39 @@ def MetroTrainInfo():
         else:
             state='%s mins' % train['Min']
         if train['DestinationName']=='No Passenger' or train['Car']=='-':
-        continue
+            continue
         all_trains = all_trains+'%s going to %s --- ' % (state, train['DestinationName'])
     all_trains_lst=[]
     all_trains_lst=all_trains.strip(" --- "),str(len(all_trains))
     return all_trains_lst
 
 def FoodTrucks():
-    # May have to submit a different User-Agent or the RANDOM in the variable
-    food_trucks = requests.get('http://foodtruckfiesta.com/apps/map_json.php')
+    # TODO - Make this a "try"
+    headers = {'User-Agent': ua}
+    food_trucks = requests.get('http://foodtruckfiesta.com/apps/map_json.php', headers=headers)
     all_food_trucks = food_trucks.json()
     for truck in all_food_trucks['markers']:
-        if str(truck['coord_lat'])[:5] == '38.92':
+        if str(truck['coord_lat'])[:5] == my_lat:
             all_food_trucks_combined.add(truck['print_name'])
     food_trucks_out =  ', '.join(sorted(all_food_trucks_combined))
     return food_trucks_out
 
-            
+def WhatPlane():
+    pass
+
+def WeatherUpdate():
+    # TODO - Make this a "try"
+    headers = {'User-Agent': ua}
+    url = 'http://api-ak.wunderground.com/api/c991975b7f4186c0/forecast/v:2.0/q/zmw:'+str(my_zip)+'.1.99999.json'
+    weather_req = requests.get(url, headers=headers)
+    all_weather = weather_req.json()
+    if 'error' in all_weather['response']:
+        print 'ERROR! %s' % all_weather['response']['error']['description']
+        return '* Weather ERROR *'
+    else:
+        weather_out = 'DAY: %s; NIGHT: %s' % (all_weather['forecast']['days'][0]['summary']['day']['text'], all_weather['forecast']['days'][0]['summary']['night']['text'])
+        return weather_out
+    
 ####
 # Create
 ####
@@ -165,14 +187,18 @@ matrix = Adafruit_RGBmatrix(32, 4)
 ####
 # Call the Function(s) to create content and write this to the Matrix
 ####
-loop = 0
-while loop==0: 
+while True: 
     #MatrixFill(0x00AA00, 1) #Fill the matrix with a single color
     #image = CreateImage('-> NoVA Hackers <-', 124, 124, (180, 0, 0))
     #ImageToMatrixScrollVer(image, 'down', 0.02)
     image = CreateImage('Welcome to the NoVA Hackers meeting.', 400, 400, (0, 0, 255)) #Blue
     ImageToMatrixScrollHor(image, 'r2l', 0.01)
 
+    image = CreateImage('Today's Weather', 124, 124, (180, 180, 180))
+    ImageToMatrixScrollVer(image, 'up', 0.02)
+    image = CreateImage(WeatherUpdate(), len(WeatherUpdate())*7, len(WeatherUpdate())*7, (0, 180, 180)) #???
+    ImageToMatrixScrollHor(image, 'r2l', 0.01)
+    
     image = CreateImage('Food Trucks', 124, 124, (180, 180, 180))
     ImageToMatrixScrollVer(image, 'up', 0.02)
     image = CreateImage(FoodTrucks(), len(FoodTrucks())*7, len(FoodTrucks())*7, (180, 0, 0)) #Red
