@@ -11,7 +11,7 @@
 # Load libraries
 ####
 from PIL import Image, ImageDraw, ImageFont
-#from rgbmatrix import Adafruit_RGBmatrix #DEBUG TURN ON BEFORE USING WITH MATRIX
+from rgbmatrix import Adafruit_RGBmatrix
 from datetime import datetime, timedelta
 from pytz import timezone
 import time
@@ -172,17 +172,17 @@ def WeatherUpdate():
     url = 'http://api-ak.wunderground.com/api/c991975b7f4186c0/forecast/v:2.0/q/zmw:'+str(my_zip)+'.1.99999.json'
     weather_req = requests.get(url, headers=headers)
     all_weather = weather_req.json()
-    print json.dumps(all_weather, indent=4)
-    '''for item in all_weather['markers']:
-        if str(item['coord_lat'])[:5] == my_lat:
-            all_food_trucks_combined.add(truck['print_name'])
-    food_trucks_out =  ', '.join(sorted(all_food_trucks_combined))
-    return food_trucks_out'''
+    if 'error' in all_weather['response']:
+        print 'ERROR! %s' % all_weather['response']['error']['description']
+        return '* Weather ERROR *'
+    else:
+        weather_out = 'DAY: %s; NIGHT: %s' % (all_weather['forecast']['days'][0]['summary']['day']['text'], all_weather['forecast']['days'][0]['summary']['night']['text'])
+        return weather_out
     
 ####
 # Create
 ####
-#matrix = Adafruit_RGBmatrix(32, 4) #DEBUG TURN ON BEFORE USING WITH MATRIX
+matrix = Adafruit_RGBmatrix(32, 4)
 
 ####
 # Call the Function(s) to create content and write this to the Matrix
@@ -191,9 +191,14 @@ while True:
     #MatrixFill(0x00AA00, 1) #Fill the matrix with a single color
     #image = CreateImage('-> NoVA Hackers <-', 124, 124, (180, 0, 0))
     #ImageToMatrixScrollVer(image, 'down', 0.02)
-    '''image = CreateImage('Welcome to the NoVA Hackers meeting.', 400, 400, (0, 0, 255)) #Blue
+    image = CreateImage('Welcome to the NoVA Hackers meeting.', 400, 400, (0, 0, 255)) #Blue
     ImageToMatrixScrollHor(image, 'r2l', 0.01)
 
+    image = CreateImage('Today's Weather', 124, 124, (180, 180, 180))
+    ImageToMatrixScrollVer(image, 'up', 0.02)
+    image = CreateImage(WeatherUpdate(), len(WeatherUpdate())*7, len(WeatherUpdate())*7, (0, 180, 180)) #???
+    ImageToMatrixScrollHor(image, 'r2l', 0.01)
+    
     image = CreateImage('Food Trucks', 124, 124, (180, 180, 180))
     ImageToMatrixScrollVer(image, 'up', 0.02)
     image = CreateImage(FoodTrucks(), len(FoodTrucks())*7, len(FoodTrucks())*7, (180, 0, 0)) #Red
@@ -208,8 +213,4 @@ while True:
     image = CreateImage('World Time', 124, 124, (180, 180, 180))
     ImageToMatrixScrollVer(image, 'up', 0.02)
     image = CreateImage(TimeZoneText(), 2300, 2300, (180, 0, 180)) #Purple
-    ImageToMatrixScrollHor(image, 'r2l', 0.01)'''
-    
-    FoodTrucks()
-    WeatherUpdate()
-    exit()
+    ImageToMatrixScrollHor(image, 'r2l', 0.01)
