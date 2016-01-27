@@ -26,7 +26,7 @@ utc = pytz.utc
 text = ''
 all_food_trucks_combined = set()
 my_zip = 22201   # US Zip Code used in the weather module
-my_lat = 38.92   # The latitude you want to use as a location
+my_lat = 38.92   # The latitude you want to use as a location. More numbers = more precise & fewer results
 my_lon = -77.17  # The longitude you want to use as a location
 ua = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36'
 
@@ -153,31 +153,35 @@ def MetroTrainInfo():
     return all_trains_lst
 
 def FoodTrucks():
-    # TODO - Make this a "try"
+    precision = len(str(my_lat))
     headers = {'User-Agent': ua}
-    food_trucks = requests.get('http://foodtruckfiesta.com/apps/map_json.php', headers=headers)
-    all_food_trucks = food_trucks.json()
-    for truck in all_food_trucks['markers']:
-        if str(truck['coord_lat'])[:5] == my_lat:
-            all_food_trucks_combined.add(truck['print_name'])
-    food_trucks_out =  ', '.join(sorted(all_food_trucks_combined))
-    return food_trucks_out
-
-def WhatPlane():
-    pass
+    try:
+        food_trucks = requests.get('http://foodtruckfiesta.com/apps/map_json.php', headers=headers)
+        all_food_trucks = food_trucks.json()
+        for truck in all_food_trucks['markers']:
+            if str(truck['coord_lat'])[:precision] == str(my_lat):
+                all_food_trucks_combined.add(truck['print_name'])
+        food_trucks_out =  ', '.join(sorted(all_food_trucks_combined))
+        if food_trucks_out == '':
+            food_trucks_out = '- No food trucks found -'
+        return food_trucks_out
+    except:
+        return '* Food Truck ERROR - Web Call *'
 
 def WeatherUpdate():
-    # TODO - Make this a "try"
     headers = {'User-Agent': ua}
     url = 'http://api-ak.wunderground.com/api/c991975b7f4186c0/forecast/v:2.0/q/zmw:'+str(my_zip)+'.1.99999.json'
-    weather_req = requests.get(url, headers=headers)
-    all_weather = weather_req.json()
-    if 'error' in all_weather['response']:
-        print 'ERROR! %s' % all_weather['response']['error']['description']
-        return '* Weather ERROR *'
-    else:
-        weather_out = 'DAY: %s; NIGHT: %s' % (all_weather['forecast']['days'][0]['summary']['day']['text'], all_weather['forecast']['days'][0]['summary']['night']['text'])
-        return weather_out
+    try:
+        weather_req = requests.get(url, headers=headers)
+        all_weather = weather_req.json()
+        if 'error' in all_weather['response']:
+            print 'ERROR! %s' % all_weather['response']['error']['description']
+            return '* Weather ERROR *'
+        else:
+            weather_out = 'DAY: %s; NIGHT: %s' % (all_weather['forecast']['days'][0]['summary']['day']['text'], all_weather['forecast']['days'][0]['summary']['night']['text'])
+            return weather_out
+    except:
+        return '* Weather ERROR - Web Call *'
     
 ####
 # Create
