@@ -25,6 +25,9 @@ import json
 utc = pytz.utc
 text = ''
 all_food_trucks_combined = set()
+my_zip = 22201 # US Zip Code used in the weather module
+my_lat = 38.92 # The latitude you want to use as a location
+my_lon = -77.17 # The longitude you want to use as a location
 
 ####
 # Methods
@@ -128,6 +131,8 @@ def TimeZoneText():
     return text
 
 def MetroTrainInfo():
+    # This function accesses the Washington DC Area Metro Transit Authority train information
+    # You will need to get an API key from their site before using this.
     requests.packages.urllib3.disable_warnings()
     headers = { 'api_key': '[APIKEY]'} # Get this from the API area of WMATA's site
     wmata = requests.get("https://api.wmata.com/StationPrediction.svc/json/GetPrediction/ N03", headers=headers, verify=False)
@@ -151,12 +156,31 @@ def FoodTrucks():
     food_trucks = requests.get('http://foodtruckfiesta.com/apps/map_json.php')
     all_food_trucks = food_trucks.json()
     for truck in all_food_trucks['markers']:
-        if str(truck['coord_lat'])[:5] == '38.92':
+        if str(truck['coord_lat'])[:5] == my_lat:
             all_food_trucks_combined.add(truck['print_name'])
     food_trucks_out =  ', '.join(sorted(all_food_trucks_combined))
     return food_trucks_out
 
-            
+def WhatPlane():
+    # May have to submit a different User-Agent or the RANDOM in the variable
+    '''food_trucks = requests.get('http://foodtruckfiesta.com/apps/map_json.php')
+    all_food_trucks = food_trucks.json()
+    for truck in all_food_trucks['markers']:
+        if str(truck['coord_lat'])[:5] == my_lat:
+            all_food_trucks_combined.add(truck['print_name'])
+    food_trucks_out =  ', '.join(sorted(all_food_trucks_combined))
+    return food_trucks_out'''
+
+def WeatherUpdate():
+    # May have to submit a different User-Agent or the RANDOM in the variable
+    '''food_trucks = requests.get('http://foodtruckfiesta.com/apps/map_json.php')
+    all_food_trucks = food_trucks.json()
+    for truck in all_food_trucks['markers']:
+        if str(truck['coord_lat'])[:5] == my_lat:
+            all_food_trucks_combined.add(truck['print_name'])
+    food_trucks_out =  ', '.join(sorted(all_food_trucks_combined))
+    return food_trucks_out'''
+    
 ####
 # Create
 ####
