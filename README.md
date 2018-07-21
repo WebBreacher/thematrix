@@ -17,3 +17,6 @@ I commented the code for ease of use/hacking (since my Python skills are rusty a
 
 # In Action
 If you want to see it in action/running, check out my YouTube video at https://www.youtube.com/watch?v=ve_ZMlnGpg4
+
+# License
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
